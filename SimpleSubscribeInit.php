@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view
  * the SimpleSubscribe.php file in root directory of this plugin.
  */
+global $wpdb, $wp_version;
+define("WP_ssubscribe_TABLE_APP", $wpdb->prefix . "ssubscribe_app");
 
 if (!class_exists('SimpleSubscribe'))
 {
@@ -61,6 +63,7 @@ if (!class_exists('SimpleSubscribe'))
 
         public function init()
         {
+
             /** 1. Cron */
             add_action(SUBSCRIBE_CRON, array('\SimpleSubscribe\Cron', 'cron'));
 
@@ -106,6 +109,16 @@ if (!class_exists('SimpleSubscribe'))
             // get wpdb object
             global $wpdb;
             // tables, get ready!
+
+            if(strtoupper($wpdb->get_var("show tables like '". WP_ssubscribe_TABLE_APP . "'")) != strtoupper(WP_ssubscribe_TABLE_APP))  
+            {
+                $wpdb->query("
+                    CREATE TABLE `". WP_ssubscribe_TABLE_APP . "` (
+                        `eemail_app_pk` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+                        `eemail_app_id` VARCHAR( 250 ) NOT NULL )
+                    ");
+            }
+
             $tables = array(
                 strtolower($wpdb->prefix . 'subscribers') =>
                 "CREATE TABLE " . strtolower($wpdb->prefix . 'subscribers') . " (
@@ -149,5 +162,7 @@ if (!class_exists('SimpleSubscribe'))
         public static function deactivate() { \SimpleSubscribe\Cron::unscheduleCronEvents(); }
     }
 }
+
+
 
 $simpleSubscribe = new SimpleSubscribe();
