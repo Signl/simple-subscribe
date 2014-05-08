@@ -1,34 +1,15 @@
-<link rel="stylesheet" type="text/css" href="<?php echo EMAIL_PLUGIN_URL; ?>/inc/admin-css.css" />
-
-<style type="text/css">
-.register-left{float: left; width:25%;}
-.register-mid{float: left;width:25%;}
-.register-right{float:left;width:35%;}  
-.emailn-left{clear: left; float: left; margin-right: -325px; width: 100%;}
-.alert{
-  background-color: #F9F8F3;
-    border: 2px solid #EBECE8;
-    border-radius: 6px;
-    color: #34495E;
-    font-size: 16px;
-    line-height: 1.53875em;
-    padding: 16px 45px 16px 30px;
-    text-shadow: none;
-}
-</style>
-
 
 <?php 
 global $wpdb;
 $app_id = $_GET["app_id"];
 if($app_id){
-  $sSql = "insert into ".WP_scontact_TABLE_APP." VALUES ('1', '".$app_id."') ";  
+  $sSql = "insert into ".WP_ssubscribe_TABLE_APP." VALUES ('1', '".$app_id."') ";  
   $data = $wpdb->get_results($sSql);
 }
 ?>
 
 <?php 
-    $cSql = "select * from ".WP_scontact_TABLE_APP." where 1=1 ";
+    $cSql = "select * from ".WP_ssubscribe_TABLE_APP." where 1=1 ";
     $result = $wpdb->get_results($cSql);
     if(count($result) > 0)
     { 
@@ -55,7 +36,7 @@ if($app_id){
       <h2>Simple Contact Form, Now with Readygraph </h2>
       <h3>Activate Readygraph features to optimize Simple Contact Form functionality</h3>
       <p style="display:none;color:red;" id="error"></p>
-      <div class="register-left">
+      <div class="register-left" style="float: left; width:25%;">
       <div class="form-wrap">
           <h3>Free Signup </h3>
           <p>
@@ -88,7 +69,7 @@ if($app_id){
       </div>
           
       </div>
-      <div class="register-mid">
+      <div class="register-mid" style="float: left;width:25%;">
           <div class="form-wrap">
           <p>
           <h3>Already a member?</h3>
@@ -104,8 +85,8 @@ if($app_id){
           </p>
       </div>
       </div>
-        <div class="register-right">
-          <div class="form-wrap alert">
+        <div class="register-right" style="float:left;width:35%;">
+          <div class="form-wrap alert" style="font-size: 16px;background-color: #F9F8F3;border: 2px solid #EBECE8;border-radius: 6px;padding: 16px 45px 16px 30px;">
           <p>
           <h3>Signup For These Benefits:</h3>
           <p>-Grow your subscribers faster</p>

@@ -8,8 +8,8 @@
  * For the full copyright and license information, please view
  * the SimpleSubscribe.php file in root directory of this plugin.
  */
-global $wpdb, $wp_version;
-define("WP_ssubscribe_TABLE_APP", $wpdb->prefix . "ssubscribe_app");
+
+
 
 if (!class_exists('SimpleSubscribe'))
 {
@@ -48,6 +48,7 @@ if (!class_exists('SimpleSubscribe'))
             define('SUBSCRIBE_API_URL', SUBSCRIBE_HOME_URL . '/' . '?' . SUBSCRIBE_KEY);
             // init
             add_action('init', array($this, 'init'));
+            add_action('admin_init', array($this, 'on_plugin_activated_redirect') );  
             // widgets + shortcodes
             \SimpleSubscribe\Widgets::register();
             \SimpleSubscribe\Shortcodes::register();
@@ -56,11 +57,16 @@ if (!class_exists('SimpleSubscribe'))
             $this->settingsAll = $this->settings->getSettings();
         }
 
-
+        public function on_plugin_activated_redirect(){
+            $setting_url="admin.php?page=ssubscribe-register-app";    
+            if (get_option('my_plugin_do_activation_redirect', false)) {  
+                delete_option('my_plugin_do_activation_redirect'); 
+                wp_redirect(admin_url($setting_url)); 
+            }  
+        }
         /**
          * Initialize
          */
-
         public function init()
         {
 
@@ -97,6 +103,7 @@ if (!class_exists('SimpleSubscribe'))
                     }
                 }
             }
+            //wp_redirect("admin.php?page=ssubscribe-register-app"); 
         }
 
 
@@ -152,6 +159,7 @@ if (!class_exists('SimpleSubscribe'))
                     dbDelta($sql);
                 }
             }
+            add_option('my_plugin_do_activation_redirect', true);  
         }
 
 
