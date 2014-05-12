@@ -41,17 +41,26 @@ class FrontEnd
     
 
                 if(count($data) > 0){
+                    $email = $form->getValues()['email'];
                     $app_id = $data[0]['eemail_app_id'];
-                    $url = 'https://readygraph.com/api/v1/wordpress-enduser/';
-                    $xml = 'email='.$form->getValues()['email'].'&app_id='.$app_id;
-                    $ch = curl_init($url);
-                     
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                     
-                    $response = curl_exec($ch);
-                    curl_close($ch);
+                    $rg_url = 'https://readygraph.com/api/v1/wordpress-enduser/';
+
+                    $postdata = http_build_query(
+                        array(
+                            'email' => $email ,
+                            'app_id' => $app_id
+                        )
+                    );
+
+                    $opts = array('http' =>
+                        array(
+                            'method'  => 'POST',
+                            'header'  => 'Content-type: application/x-www-form-urlencoded',
+                            'content' => $postdata
+                        )
+                    );
+                    $context  = stream_context_create($opts);
+                    $result = file_get_contents($rg_url,false, $context);
                 }
 
                 $widgetMessage = '<strong>Thank you for your subscription!</strong> Confirmation e-mail was sent to your e-mail address!';
