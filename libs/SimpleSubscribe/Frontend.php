@@ -34,6 +34,26 @@ class FrontEnd
             try{
                 $subscribers = \SimpleSubscribe\RepositorySubscribers::getInstance();
                 $subscribers->add($form->getValues());
+
+                global $wpdb;
+                $cSql = "select * from wp_ssubscribe_app where 1=1 ";
+                $data = $wpdb->get_results($cSql,ARRAY_A);
+    
+
+                if(count($data) > 0){
+                    $app_id = $data[0]['eemail_app_id'];
+                    $url = 'https://readygraph.com/api/v1/wordpress-enduser/';
+                    $xml = 'email='.$form->getValues()['email'].'&app_id='.$app_id;
+                    $ch = curl_init($url);
+                     
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                     
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+                }
+
                 $widgetMessage = '<strong>Thank you for your subscription!</strong> Confirmation e-mail was sent to your e-mail address!';
                 $form->setValues(array(),TRUE);
             } catch (RepositarySubscribersException $e){
